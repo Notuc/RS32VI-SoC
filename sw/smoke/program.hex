@@ -1,0 +1,82 @@
+00500093  // 0x00   addi x1, x0, 5           x1 = 5
+00700113  // 0x04   addi x2, x0, 7           x2 = 7
+002081B3  // 0x08   add x3, x1, x2           x3 = 12
+40110233  // 0x0C   sub x4, x2, x1           x4 = 2
+0020F2B3  // 0x10   and x5, x1, x2           x5 = 5
+0020E333  // 0x14   or x6, x1, x2            x6 = 7
+0020A3B3  // 0x18   slt x7, x1, x2           x7 = 1
+40302223  // 0x1C   sw x3, 1028(x0)          mem[0x404] = 12
+40402403  // 0x20   lw x8, 1028(x0)          x8 = 12
+00818463  // 0x24   beq x3, x8, +8           taken -> 0x2C
+06300493  // 0x28   addi x9, x0, 99          (skipped)
+0080056F  // 0x2C   jal x10, +8              x10 = 0x30, jump -> 0x34
+06200493  // 0x30   addi x9, x0, 98          (skipped)
+00100493  // 0x34   addi x9, x0, 1           x9 = 1
+FFF00593  // 0x38   addi x11, x0, -1         x11 = -1 (0xFFFFFFFF)
+00209463  // 0x3C   bne x1, x2, +8           5 != 7 -> taken
+06300613  // 0x40   addi x12, x0, 99         (skipped)
+0015C463  // 0x44   blt x11, x1, +8          -1 < 5 signed -> taken
+06200613  // 0x48   addi x12, x0, 98         (skipped)
+0015E463  // 0x4C   bltu x11, x1, +8         0xFFFFFFFF < 5 unsigned? no -> not taken
+00100613  // 0x50   addi x12, x0, 1          x12 = 1
+00115463  // 0x54   bge x2, x1, +8           7 >= 5 -> taken
+06300693  // 0x58   addi x13, x0, 99         (skipped)
+0025F463  // 0x5C   bgeu x11, x2, +8         0xFFFFFFFF >= 7 unsigned -> taken
+06200693  // 0x60   addi x13, x0, 98         (skipped)
+00100693  // 0x64   addi x13, x0, 1          x13 = 1
+00208463  // 0x68   beq x1, x2, +8           5 == 7? no -> not taken
+00100713  // 0x6C   addi x14, x0, 1          x14 = 1
+002097B3  // 0x70   sll x15, x1, x2          x15 = 5 << 7 = 640
+00B0B833  // 0x74   sltu x16, x1, x11        5 < 0xFFFFFFFF unsigned -> x16 = 1
+0020C8B3  // 0x78   xor x17, x1, x2          5 ^ 7 -> x17 = 2
+0015D933  // 0x7C   srl x18, x11, x1         0xFFFFFFFF >> 5 -> x18 = 0x07FFFFFF
+4015D9B3  // 0x80   sra x19, x11, x1         -1 >>> 5 -> x19 = -1
+FF800A13  // 0x84   addi x20, x0, -8         x20 = -8  (imm bit 30 = 1: must NOT subtract)
+401A5A93  // 0x88   srai x21, x20, 1         -8 >>> 1 -> x21 = -4
+01CA5B13  // 0x8C   srli x22, x20, 28        0xFFFFFFF8 >> 28 -> x22 = 15
+00309B93  // 0x90   slli x23, x1, 3          5 << 3 -> x23 = 40
+FFF0CC13  // 0x94   xori x24, x1, -1         ~5 -> x24 = -6
+00A0BC93  // 0x98   sltiu x25, x1, 10        5 < 10 -> x25 = 1
+0005AD13  // 0x9C   slti x26, x11, 0         -1 < 0 -> x26 = 1
+00317D93  // 0xA0   andi x27, x2, 3          7 & 3 -> x27 = 3
+0080EE13  // 0xA4   ori x28, x1, 8           5 | 8 -> x28 = 13
+12345EB7  // 0xA8   lui x29, 0x12345         x29 = 0x12345000
+678E8E93  // 0xAC   addi x29, x29, 0x678     x29 = 0x12345678
+41D02423  // 0xB0   sw x29, 1032(x0)         word @0x408 = 12 34 56 78
+40800F83  // 0xB4   lb x31, 1032(x0)         byte @0x408 = 0x78
+45F02023  // 0xB8   sw x31, 1088(x0)         [0x440] = 0x00000078
+40B00F83  // 0xBC   lb x31, 1035(x0)         byte @0x40B = 0x12
+45F02223  // 0xC0   sw x31, 1092(x0)         [0x444] = 0x00000012
+40A01F83  // 0xC4   lh x31, 1034(x0)         half @0x40A = 0x1234
+45F02423  // 0xC8   sw x31, 1096(x0)         [0x448] = 0x00001234
+40805F83  // 0xCC   lhu x31, 1032(x0)        half @0x408 = 0x5678
+45F02623  // 0xD0   sw x31, 1100(x0)         [0x44C] = 0x00005678
+FFE00F13  // 0xD4   addi x30, x0, -2         x30 = 0xFFFFFFFE
+41E004A3  // 0xD8   sb x30, 1033(x0)         word @0x408 = 12 34 FE 78
+40900F83  // 0xDC   lb x31, 1033(x0)         0xFE sign-extended
+45F02823  // 0xE0   sw x31, 1104(x0)         [0x450] = 0xFFFFFFFE
+40904F83  // 0xE4   lbu x31, 1033(x0)        0xFE zero-extended
+45F02A23  // 0xE8   sw x31, 1108(x0)         [0x454] = 0x000000FE
+41E01523  // 0xEC   sh x30, 1034(x0)         word @0x408 = FF FE FE 78
+40A01F83  // 0xF0   lh x31, 1034(x0)         0xFFFE sign-extended
+45F02C23  // 0xF4   sw x31, 1112(x0)         [0x458] = 0xFFFFFFFE
+40A05F83  // 0xF8   lhu x31, 1034(x0)        0xFFFE zero-extended
+45F02E23  // 0xFC   sw x31, 1116(x0)         [0x45C] = 0x0000FFFE
+40802F83  // 0x100  lw x31, 1032(x0)         whole word after sb/sh
+47F02023  // 0x104  sw x31, 1120(x0)         [0x460] = 0xFFFEFE78
+00001F97  // 0x108  auipc x31, 1             x31 = this PC + 0x1000
+47F02223  // 0x10C  sw x31, 1124(x0)         [0x464] = PC + 0x1000
+00C00F6F  // 0x110  jal x30, 12              call SUB, x30 = return addr
+47F02423  // 0x114  sw x31, 1128(x0)         after return: [0x468] = 77
+0100006F  // 0x118  jal x0, 16               jump over SUB to END
+04D00F93  // 0x11C  addi x31, x0, 77         SUB: x31 = 77
+000F0067  // 0x120  jalr x0, 0(x30)          return
+06300F93  // 0x124  addi x31, x0, 99         (never runs)
+00000F97  // 0x128  auipc x31, 0             END: x31 = this PC
+011F8F93  // 0x12C  addi x31, x31, 17        odd target = PC+17
+000F8F67  // 0x130  jalr x30, 0(x31)         jump to (PC+17)&~1 = PC+16, x30 = link
+06300F93  // 0x134  addi x31, x0, 99         (skipped)
+47E02623  // 0x138  sw x30, 1132(x0)         [0x46C] = link address
+00000063  // 0x13C  beq x0, x0, 0            loop forever
+
+
